@@ -1,0 +1,7 @@
+NOT_A_LOG_LINE
+2026-99-99 10:00:00 INFO Invalid date numbers
+10:00:00 2026-11-23 ERROR Inverted date and time
+2026-11-23 10:00:00 UNKNOWN Unknown log level here
+[2026-11-23 10:00:00] [INFO] Bracket format instead of standard format
+random garbage characters !@#$%^&*()
+2026-11-23 25:00:00 WARNING Hour out of range 25

@@ -2,4 +2,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.log
-output/
+!tests/fixtures/*.log
+output/*
+!output/.gitkeep

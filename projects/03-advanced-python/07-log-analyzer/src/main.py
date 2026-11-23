@@ -1,30 +1,15 @@
-"""Log Analyzer — implement your solution here."""
+#!/usr/bin/env python3
+"""Log Analyzer — application entry point."""
 
-# TODO: Implement the log analyser.
-#
-# Key design requirements:
-# - Use a generator to read the log file line by line.
-# - Use regular expressions to parse each line.
-# - Do NOT use readlines() or read() on large files.
-#
-# Suggested structure:
-#   LOG_PATTERN = re.compile(r"...")
-#
-#   def parse_line(line: str) -> dict | None: ...
-#   def read_log(filepath: Path) -> Generator[dict, None, None]: ...
-#   def count_by_level(entries: Iterable[dict]) -> Counter: ...
-#   def get_errors(entries: Iterable[dict]) -> list[dict]: ...
-#   def search_entries(entries: Iterable[dict], keyword: str) -> list[dict]: ...
-#   def top_errors(entries: Iterable[dict], n: int = 10) -> list[tuple]: ...
-#   def generate_summary(filepath: Path) -> dict: ...
-#   def export_json(summary: dict, output: Path) -> None: ...
-#   def export_csv(entries: list[dict], output: Path) -> None: ...
-#   def main() -> None: ...
+import sys
+from pathlib import Path
 
+# Ensure src directory is in sys.path
+src_path = Path(__file__).resolve().parent
+if str(src_path) not in sys.path:
+    sys.path.insert(0, str(src_path))
 
-def main() -> None:
-    raise NotImplementedError("Implement the main() function.")
-
+from log_analyzer.cli import main
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

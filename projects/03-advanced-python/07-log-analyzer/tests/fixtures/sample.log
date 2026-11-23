@@ -1,0 +1,26 @@
+2026-11-23 08:00:00 INFO Service initialized on port 8080
+2026-11-23 08:00:05 DEBUG Configuration loaded successfully: 42 keys
+2026-11-23 08:01:10 INFO Incoming request GET /api/v1/health from 192.168.1.10
+2026-11-23 08:01:11 DEBUG Health check passed: status=UP
+2026-11-23 08:02:15 INFO Incoming request POST /api/v1/users from 192.168.1.15
+2026-11-23 08:02:16 WARNING High memory usage detected: 85%
+2026-11-23 08:02:20 ERROR Database connection failed: connection refused on port 5432
+2026-11-23 08:03:00 INFO Retrying database connection in 5s
+2026-11-23 08:03:05 ERROR Database connection failed: connection refused on port 5432
+2026-11-23 08:03:10 WARNING Slow query response: 3200ms
+2026-11-23 08:04:00 WARNING High memory usage detected: 85%
+2026-11-23 08:05:00 ERROR Authentication failed for user admin
+2026-11-23 08:05:30 ERROR Database connection failed: connection refused on port 5432
+2026-11-23 08:06:00 CRITICAL Primary database cluster is unreachable
+2026-11-23 08:06:15 ERROR Authentication failed for user admin
+2026-11-23 08:07:00 ERROR Disk quota exceeded for volume /var/log
+2026-11-23 08:08:00 CRITICAL Primary database cluster is unreachable
+2026-11-23 08:09:00 INFO Cache flush scheduled
+2026-11-23 08:09:30 DEBUG Cache invalidation completed: 150 items evicted
+2026-11-23 08:10:00 INFO 
+2026-11-23 09:15:00 TRACE Entering internal dispatch pipeline
+2026-11-23 09:15:01 VERBOSE Payload inspect: {"action": "sync"}
+THIS IS A COMPLETELY CORRUPTED MALFORMED LINE WITH NO STRUCTURE
+2026-11-23 10:99:99 ERROR Invalid time format in line
+2026-11-23-10:05:00 INFO Missing space between date and time
+2026-11-23 11:30:00 INFO Service shutdown complete
