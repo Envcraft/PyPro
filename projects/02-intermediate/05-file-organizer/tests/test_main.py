@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.main import get_category, handle_duplicate, organize, scan_files
+from src.main import get_category, handle_duplicate, organize, scan_files  # noqa: E501
 
 
 class TestGetCategory:
@@ -48,17 +48,15 @@ class TestScanFiles:
     def test_empty_directory(self, tmp_path: Path) -> None:
         assert scan_files(tmp_path) == []
 
-    def test_recursive_finds_nested(self, tmp_path: Path) -> None:
+    def test_skips_nested_files(self, tmp_path: Path) -> None:
         sub = tmp_path / "sub"
         sub.mkdir()
         (sub / "nested.txt").write_text("x")
-        assert len(scan_files(tmp_path, recursive=True)) == 1
+        assert scan_files(tmp_path) == []
 
-    def test_non_recursive_skips_nested(self, tmp_path: Path) -> None:
-        sub = tmp_path / "sub"
-        sub.mkdir()
-        (sub / "nested.txt").write_text("x")
-        assert scan_files(tmp_path, recursive=False) == []
+    def test_does_not_return_subdirectories(self, tmp_path: Path) -> None:
+        (tmp_path / "sub").mkdir()
+        assert scan_files(tmp_path) == []
 
 
 class TestHandleDuplicate:
@@ -128,9 +126,11 @@ class TestOrganize:
     def test_empty_directory(self, tmp_path: Path) -> None:
         organize(tmp_path, dry_run=False)  # should not raise
 
-    def test_recursive_organises_nested_files(self, tmp_path: Path) -> None:
+    def test_subfolders_are_not_touched(self, tmp_path: Path) -> None:
         sub = tmp_path / "misc"
         sub.mkdir()
         (sub / "clip.mp4").write_text("video")
-        organize(tmp_path, dry_run=False, recursive=True)
-        assert (tmp_path / "Video" / "clip.mp4").exists()
+        organize(tmp_path, dry_run=False)
+        # file inside subfolder must stay where it is
+        assert (sub / "clip.mp4").exists()
+        assert not (tmp_path / "Video" / "clip.mp4").exists()

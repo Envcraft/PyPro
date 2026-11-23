@@ -25,9 +25,8 @@ def get_category(extension: str) -> str:
     return _EXT_MAP.get(extension.lower(), "Other")
 
 
-def scan_files(directory: Path, recursive: bool = True) -> list[Path]:
-    pattern = "**/*" if recursive else "*"
-    return [p for p in directory.glob(pattern) if p.is_file()]
+def scan_files(directory: Path) -> list[Path]:
+    return [p for p in directory.iterdir() if p.is_file()]
 
 
 def handle_duplicate(destination: Path) -> Path:
@@ -61,8 +60,8 @@ def setup_logging(log_path: Path) -> None:
     )
 
 
-def organize(directory: Path, dry_run: bool = True, recursive: bool = True) -> None:
-    files = scan_files(directory, recursive=recursive)
+def organize(directory: Path, dry_run: bool = True) -> None:
+    files = scan_files(directory)
 
     if not files:
         logging.info("No files found in %s", directory)
@@ -74,7 +73,6 @@ def organize(directory: Path, dry_run: bool = True, recursive: bool = True) -> N
     moved = skipped = errors = 0
 
     for file in files:
-        # Skip files that are already inside a category subfolder we created
         if file.parent.name in {*CATEGORIES, "Other"} and file.parent.parent == directory:
             logging.info("SKIP (already organised)  %s", file.name)
             skipped += 1
@@ -104,30 +102,44 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Organise files in a directory into category subfolders."
     )
-    parser.add_argument("directory", type=Path, help="Target directory to organise.")
+    parser.add_argument("directory", nargs="?", type=Path, help="Target directory to organise.")
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Preview planned operations without moving any files.",
     )
-    parser.add_argument(
-        "--no-recursive",
-        action="store_true",
-        help="Scan only the top level (recursive is on by default).",
-    )
     args = parser.parse_args()
 
-    target: Path = args.directory.resolve()
+    directory = args.directory
+    if directory is None:
+        while True:
+            raw = input("Enter the target directory path: ").strip()
+            if not raw:
+                print("Path cannot be empty. Please try again.")
+                continue
+            candidate = Path(raw).resolve()
+            if not candidate.exists():
+                print(f"Directory does not exist: {candidate}. Please try again.")
+                continue
+            if not candidate.is_dir():
+                print(f"Not a directory: {candidate}. Please try again.")
+                continue
+            directory = candidate
+            break
+        target = directory
+    else:
+        target = directory.resolve()
+        if not target.exists():
+            parser.error(f"Directory does not exist: {target}")
+        if not target.is_dir():
+            parser.error(f"Path is not a directory: {target}")
 
-    if not target.exists():
-        parser.error(f"Directory does not exist: {target}")
-    if not target.is_dir():
-        parser.error(f"Path is not a directory: {target}")
-
-    log_path = target / "organizer.log"
+    logs_dir = target / "logs"
+    logs_dir.mkdir(exist_ok=True)
+    log_path = logs_dir / "organizer.log"
     setup_logging(log_path)
 
-    organize(target, dry_run=args.dry_run, recursive=not args.no_recursive)
+    organize(target, dry_run=args.dry_run)
 
 
 if __name__ == "__main__":
